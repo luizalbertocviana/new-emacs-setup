@@ -59,6 +59,7 @@
 
 (define-keys g-keymap
   '(("g" beginning-of-buffer)
+    ("l" goto-line)
     ("G" end-of-buffer)))
 
 (define-key keys-minor-mode-map (kbd "g") g-keymap)
@@ -71,20 +72,63 @@
 (define-keys d-keymap
   '(("w" kill-word)
     ("b" backward-kill-word)
+    ("d" kill-whole-line)
+    ("f" zap-to-char)
     ("L" kill-line)
+    ("s" just-one-space)
+    ("S" kill-sexp)
+    ("o" delete-blank-lines)
     ("v" kill-region)
 
     ("C-l" kill-sentence)))
 
 (define-key keys-minor-mode-map (kbd "d") d-keymap)
 
+;; v keymap
+
+(defvar v-keymap
+  (make-sparse-keymap))
+
+(define-keys v-keymap
+  '(("v" set-mark-command)
+    ("b" mark-whole-buffer)
+    ("w" mark-word)
+    ("s" mark-sexp)
+    ("p" mark-paragraph)
+    ("P" mark-page)
+    ("f" mark-defun)
+    ("r" rectangle-mark-mode)
+    ("x" exchange-point-and-mark)))
+
+(define-key keys-minor-mode-map (kbd "v") v-keymap)
+
+;; r keymap
+
+(defvar r-keymap
+  (make-sparse-keymap))
+
+(define-keys r-keymap
+  '(("m" point-to-register)
+    ("g" jump-to-register)
+    ("a" append-to-register)
+    ("w" window-configuration-to-register)
+    ("f" frameset-to-register)
+    ("y" copy-to-register)
+    ("p" insert-register)))
+
+(define-key keys-minor-mode-map (kbd "r") r-keymap)
+
 ;; editing keys
 
 (define-keys keys-minor-mode-map
-  '(("x" delete-char)
+  '(("x" delete-forward-char)
     ("u" undo)
+    ("o" open-line)
+    ("y" kill-ring-save)
     ("p" yank)
-    ("P" yank-pop)))
+    ("P" yank-pop)
+    ("." repeat)
+    (">" repeat-complex-command)))
 
 ;; file keymap
 
@@ -95,13 +139,36 @@
   '(("f" find-file)
     ("s" save-buffer)))
 
+;; rectangle keymap
+
+(defvar rectangle-map
+  (make-sparse-keymap))
+
+(define-keys rectangle-map
+  '(("d" kill-rectangle)
+    ("c" clear-rectangle)
+    ("s" open-rectangle)
+    ("p" yank-rectangle)
+    ("i" string-insert-rectangle)
+    ("n" rectangle-number-lines)
+    ("r" string-rectangle)
+    ("y" copy-rectangle-as-kill)))
+
 ;; text keymap
 
 (defvar text-map
   (make-sparse-keymap))
 
 (define-keys text-map
-  '(("f" fill-paragraph)))
+  `(("f" fill-paragraph)
+    ("j" delete-indentation)
+    ("v" visual-line-mode)
+    ("u" upcase-dwim)
+    ("s" ispell-word)
+    ("R" query-replace-regexp)
+    ("r" ,rectangle-map)
+    ("l" downcase-dwim)
+    ("c" count-words)))
 
 ;; buffer keymap
 
@@ -131,6 +198,8 @@
 
 (define-keys help-map
   '(("m" describe-mode)
+    ("a" apropos)
+    ("b" describe-bindings)
     ("k" describe-key)
     ("e" info-emacs-manual)
     ("v" describe-variable)
@@ -153,10 +222,6 @@
     ("q" save-buffers-kill-terminal)))
 
 (define-key keys-minor-mode-map (kbd leader) leader-map)
-
-;; visual keybindings
-
-(define-key keys-minor-mode-map (kbd "v") 'set-mark-command)
 
 ;; aborting keybinding
 
