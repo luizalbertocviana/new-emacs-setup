@@ -1,10 +1,24 @@
-;; some keymaps
+;; keys minor mode
 
-(defvar old-global-map
-  (copy-keymap global-map))
+(defvar keys-minor-mode-map
+  (make-sparse-keymap))
 
-(defvar new-global-map
-  (copy-keymap global-map))
+(define-minor-mode keys-minor-mode
+  "A minor mode to ensure some keybindings always take precedence"
+  :init-value t
+  :lighter " keys")
+
+(add-hook 'minibuffer-setup-hook
+	  (lambda ()
+	    (keys-minor-mode 0)))
+
+(add-hook 'after-load-functions
+	  (lambda (_file)
+	    (unless (eq (caar minor-mode-map-alist)
+			'keys-minor-mode)
+	      (let ((keys (assq 'keys-minor-mode minor-mode-map-alist)))
+		(assq-delete-all 'keys-minor-mode minor-mode-map-alist)
+		(add-to-list 'minor-mode-map-alist keys)))))
 
 ;; helper functions
 
@@ -15,16 +29,14 @@
 ;; keybindings
 
 ;; esc turns on the new layer of keybindings
-(define-key old-global-map (kbd "<escape>")
-  (lambda () (interactive) (use-global-map new-global-map)))
+(global-set-key (kbd "<escape>") 'keys-minor-mode)
 
 ;; i turns off the new layer of keybindings
-(define-key new-global-map (kbd "i")
-  (lambda () (interactive) (use-global-map old-global-map)))
+(define-key keys-minor-mode-map (kbd "i") 'keys-minor-mode)
 
 ;; basic movement keys
 
-(define-keys new-global-map
+(define-keys keys-minor-mode-map
   '(("h" backward-char)
     ("j" next-line)
     ("k" previous-line)
@@ -49,7 +61,7 @@
   '(("g" beginning-of-buffer)
     ("G" end-of-buffer)))
 
-(define-key new-global-map (kbd "g") g-keymap)
+(define-key keys-minor-mode-map (kbd "g") g-keymap)
 
 ;; d keymap
 
@@ -64,11 +76,11 @@
 
     ("C-l" kill-sentence)))
 
-(define-key new-global-map (kbd "d") d-keymap)
+(define-key keys-minor-mode-map (kbd "d") d-keymap)
 
 ;; editing keys
 
-(define-keys new-global-map
+(define-keys keys-minor-mode-map
   '(("x" delete-char)
     ("u" undo)
     ("p" yank)
@@ -120,6 +132,7 @@
 (define-keys help-map
   '(("m" describe-mode)
     ("k" describe-key)
+    ("e" info-emacs-manual)
     ("v" describe-variable)
     ("f" describe-function)))
 
@@ -139,16 +152,16 @@
     ("t" ,text-map)
     ("q" save-buffers-kill-terminal)))
 
-(define-key new-global-map (kbd leader) leader-map)
+(define-key keys-minor-mode-map (kbd leader) leader-map)
 
 ;; visual keybindings
 
-(define-key new-global-map (kbd "v") 'set-mark-command)
+(define-key keys-minor-mode-map (kbd "v") 'set-mark-command)
 
 ;; aborting keybinding
 
-(define-key new-global-map (kbd "<escape>") 'keyboard-quit)
+(define-key keys-minor-mode-map (kbd "<escape>") 'keyboard-quit)
 
-;; we start with the new global map
+;; we start with keys minor mode enabled
 
-(use-global-map new-global-map)
+(keys-minor-mode 1)
