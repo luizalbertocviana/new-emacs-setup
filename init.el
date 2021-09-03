@@ -114,9 +114,40 @@
     ("w" window-configuration-to-register)
     ("f" frameset-to-register)
     ("y" copy-to-register)
+    ("v" view-register)
     ("p" insert-register)))
 
 (define-key keys-minor-mode-map (kbd "r") r-keymap)
+
+;; t keymap
+
+(defvar t-keymap
+  (make-sparse-keymap))
+
+(define-keys t-keymap
+  '(("t" transpose-lines)
+    ("c" transpose-chars)
+    ("w" transpose-words)
+    ("s" transpose-sexps)))
+
+(define-key keys-minor-mode-map (kbd "t") t-keymap)
+
+;; m keymap
+
+(defvar m-keymap
+  (make-sparse-keymap))
+
+(define-keys m-keymap
+  '(("m" kmacro-end-or-call-macro)
+    ("s" kmacro-start-macro-or-insert-counter)
+    ("v" apply-macro-to-region-lines)
+    ("q" kbd-macro-query)
+    ("n" kmacro-name-last-macro)
+    ("b" kmacro-bind-to-key)
+    ("i" insert-keyboard-macro)
+    ("e" kmacro-edit-macro)))
+
+(define-key keys-minor-mode-map (kbd "m") m-keymap)
 
 ;; editing keys
 
@@ -128,7 +159,22 @@
     ("p" yank)
     ("P" yank-pop)
     ("." repeat)
-    (">" repeat-complex-command)))
+    ("s" isearch-forward-symbol-at-point)
+    (">" repeat-complex-command)
+
+    ("C-s" isearch-forward-regexp)
+    ("C-r" isearch-backward-regexp)))
+
+;; bookmark keymap
+
+(defvar bookmark-map
+  (make-sparse-keymap))
+
+(define-keys bookmark-map
+  '(("s" bookmark-set)
+    ("g" bookmark-jump)
+    ("l" list-bookmarks)
+    ("w" bookmark-save)))
 
 ;; file keymap
 
@@ -136,8 +182,9 @@
   (make-sparse-keymap))
 
 (define-keys file-map
-  '(("f" find-file)
-    ("s" save-buffer)))
+  `(("f" find-file)
+    ("s" save-buffer)
+    ("b" ,bookmark-map)))
 
 ;; rectangle keymap
 
