@@ -310,13 +310,38 @@
     ("v" describe-variable)
     ("f" describe-function)))
 
+;; program find keymap
+
+(defvar program-find-map
+  (make-sparse-keymap))
+
+(define-keys program-find-map
+  '(("r" xref-find-references)
+    ("d" xref-find-definitions)))
+
+;; lsp keymap
+
+(defvar lsp-map
+  (make-sparse-keymap))
+
+(define-keys lsp-map
+  '(("R" lsp-workspace-restart)
+    ("f" lsp-format-buffer)
+    ("i" lsp-organize-imports)
+    ("q" lsp-workspace-shutdown)
+    ("r" lsp-rename)))
+
 ;; program keymap
 
 (defvar program-map
   (make-sparse-keymap))
 
 (define-keys program-map
-  '(("c" comment-line)
+  `(("c" comment-line)
+    ("f" ,program-find-map)
+    ("l" ,lsp-map)
+    ("e" next-error)
+    ("p" check-parens)
     ("B" compile)
     ("b" recompile)))
 
