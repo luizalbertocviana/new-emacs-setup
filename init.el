@@ -8,4 +8,6 @@
 
 (load "common")
 
+(load "dired-setup")
+
 (load "keys-minor-mode")
