@@ -25,3 +25,10 @@
     (key-chord-define global-map ";;" ":")
     (key-chord-define global-map "\\\\" "|")
     (key-chord-define global-map "[[" "{"))
+
+;; basic movement keys
+
+(global-set-key (kbd "C-h") 'backward-char)
+(global-set-key (kbd "C-j") 'next-line)
+(global-set-key (kbd "C-k") 'previous-line)
+(global-set-key (kbd "C-l") 'forward-char)
