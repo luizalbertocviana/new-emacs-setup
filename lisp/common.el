@@ -43,6 +43,9 @@
   :config
     (which-key-mode))
 
+;; hydra setups
+(use-package hydra)
+
 ;; autocompletion
 (use-package company
   :hook
