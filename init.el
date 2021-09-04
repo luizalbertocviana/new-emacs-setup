@@ -10,4 +10,6 @@
 
 (load "dired-setup")
 
+(load "functions")
+
 (load "keys-minor-mode")
