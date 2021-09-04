@@ -210,6 +210,40 @@
     ("r" string-rectangle)
     ("y" copy-rectangle-as-kill)))
 
+;; table column keymap
+
+(defvar table-column-map
+  (make-sparse-keymap))
+
+(define-keys table-column-map
+  '(("d" table-delete-column)
+    ("i" table-insert-column)))
+
+;; table row keymap
+
+(defvar table-row-map
+  (make-sparse-keymap))
+
+(define-keys table-row-map
+  '(("d" table-delete-row)
+    ("i" table-insert-row)))
+
+;; table keymap
+
+(defvar table-map
+  (make-sparse-keymap))
+
+(define-keys table-map
+  `(("C" table-capture)
+    ("R" table-recognize)
+    ("S" table-generate-source)
+    ("a" table-justify)
+    ("i" table-insert)
+    ("m" table-span-cell)
+    ("r" ,table-row-map)
+    ("c" ,table-column-map)
+    ("s" table-split-cell)))
+
 ;; text keymap
 
 (defvar text-map
@@ -217,10 +251,12 @@
 
 (define-keys text-map
   `(("f" fill-paragraph)
+    ("a" align-regexp)
     ("j" delete-indentation)
     ("v" visual-line-mode)
     ("u" upcase-dwim)
-    ("s" ispell-word)
+    ("S" ispell-word)
+    ("s" sort-lines)
     ("R" query-replace-regexp)
     ("r" ,rectangle-map)
     ("l" downcase-dwim)
@@ -284,6 +320,41 @@
     ("B" compile)
     ("b" recompile)))
 
+;; conflict keep keymap
+
+(defvar keep-keymap
+  (make-sparse-keymap))
+
+(define-keys keep-keymap
+  '(("a" smerge-keep-all)
+    ("b" smerge-keep-base)
+    ("c" smerge-keep-current)
+    ("l" smerge-keep-lower)
+    ("u" smerge-keep-upper)))
+
+;; conflict keymap
+
+(defvar conflict-map
+  (make-sparse-keymap))
+
+(define-keys conflict-map
+  `(("N" smerge-prev)
+    ("R" smerge-resolve-all)
+    ("n" smerge-next)
+    ("r" smerge-resolve)
+    ("s" smerge-swap)
+    ("k" ,keep-keymap)))
+
+;; version keymap
+
+(defvar version-map
+  (make-sparse-keymap))
+
+(define-keys version-map
+  '(("g" magit-status)
+    ("v" magit-file-dispatch)
+    ("V" magit-dispatch)))
+
 ;; leader keymap
 
 (defvar leader
@@ -292,14 +363,28 @@
 (defvar leader-map
   (make-sparse-keymap))
 
+(defun local-leader ()
+  nil)
+
+(defun switch-to-last-buffer ()
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
 (define-keys leader-map
   `(("w" ,windows-map)
     ("f" ,file-map)
     ("b" ,buffer-map)
+    ("c" calendar)
     ("h" ,help-map)
     ("t" ,text-map)
+    ("T" eshell)
     ("p" ,program-map)
+    ("v" ,version-map)
+    ("m" local-leader)
+    ("TAB" switch-to-last-buffer)
     ("q" save-buffers-kill-terminal)))
+
+(define-key leader-map (kbd "SPC") (kbd "C-c C-c"))
 
 (define-key keys-minor-mode-map (kbd leader) leader-map)
 
