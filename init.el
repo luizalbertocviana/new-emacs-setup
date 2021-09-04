@@ -12,4 +12,6 @@
 
 (load "functions")
 
+(load "keybindings")
+
 (load "keys-minor-mode")
