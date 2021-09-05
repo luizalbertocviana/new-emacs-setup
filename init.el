@@ -15,3 +15,7 @@
 (load "keybindings")
 
 (load "keys-minor-mode")
+
+(load "helm-setup")
+
+(load "org")
