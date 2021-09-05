@@ -32,3 +32,9 @@
 (global-set-key (kbd "C-j") 'next-line)
 (global-set-key (kbd "C-k") 'previous-line)
 (global-set-key (kbd "C-l") 'forward-char)
+
+;; company autocompletion selection
+
+(global-set-key (kbd "M-j") 'company-select-next)
+(global-set-key (kbd "M-k") 'company-select-previous)
+(global-set-key (kbd "M-l") 'company-complete)
