@@ -246,7 +246,7 @@
 ;; editing keys
 
 (define-keys keys-minor-mode-map
-  '(("x" delete-forward-char)
+  `(("x" delete-forward-char)
     ("u" undo)
     ("y" kill-ring-save)
     ("p" yank)
@@ -257,6 +257,9 @@
 
     ("C-s" isearch-forward-regexp)
     ("C-r" isearch-backward-regexp)
+
+    ("D" ,(kill-movement 'end-of-line))
+    ("C" ,(change-movement 'end-of-line))
 
     ("M-l" completion-at-point)))
 
