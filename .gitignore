@@ -1,1 +1,9 @@
 *.el~
+*#
+*~
+/places
+/projectile-bookmarks.eld
+/recentf
+/straight/
+/transient/
+/var/
