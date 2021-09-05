@@ -31,28 +31,61 @@
 ;; esc turns on the new layer of keybindings
 (global-set-key (kbd "<escape>") 'keys-minor-mode)
 
-;; i turns off the new layer of keybindings
-(define-key keys-minor-mode-map (kbd "i") 'keys-minor-mode)
+;; insert entering keybindings
+
+(defun open-newline-below ()
+  (end-of-line)
+  (newline)
+  (indent-for-tab-command))
+
+(defun open-newline-above ()
+  (beginning-of-line)
+  (newline)
+  (previous-line)
+  (indent-for-tab-command))
+
+(defun insert-after-movement (movement)
+  `(lambda ()
+     (interactive)
+     (funcall #',movement)
+     (keys-minor-mode -1)))
+
+(define-keys keys-minor-mode-map
+  `(("i" keys-minor-mode)
+    ("a" ,(insert-after-movement 'forward-char))
+    ("A" ,(insert-after-movement 'end-of-line))
+    ("o" ,(insert-after-movement 'open-newline-below))
+    ("O" ,(insert-after-movement 'open-newline-above))
+    ("I" ,(insert-after-movement 'back-to-indentation))))
 
 ;; basic movement keys
 
 (define-keys keys-minor-mode-map
-  '(("h" backward-char)
+  `(("h" backward-char)
     ("j" next-line)
     ("k" previous-line)
     ("J" end-of-defun)
     ("K" beginning-of-defun)
     ("l" forward-char)
     ("L" move-end-of-line)
-    ("H" move-beginning-of-line)
+    ("$" move-end-of-line)
+    ("H" back-to-indentation)
+    ("0" move-beginning-of-line)
+    ("G" end-of-buffer)
+
+    ("f" isearch-forward-regexp)
+    ("F" isearch-backward-regexp)
     
     ("C-h" backward-sentence)
     ("C-j" scroll-up-command)
     ("C-k" scroll-down-command)
     ("C-l" forward-sentence)
 
-    ("w" forward-word)
-    ("b" backward-word)))
+    ("w" forward-to-word)
+    ("W" forward-whitespace)
+    ("e" forward-word)
+    ("b" backward-word)
+    ("B" ,(lambda (arg) (interactive "p") (forward-whitespace (* -1 arg))))))
 
 ;; g keymap
 
@@ -62,7 +95,9 @@
 (define-keys g-keymap
   '(("g" beginning-of-buffer)
     ("l" goto-line)
-    ("G" end-of-buffer)))
+    ("j" join-line)
+    ("G" end-of-buffer)
+    ("d" xref-find-definitions)))
 
 (define-key keys-minor-mode-map (kbd "g") g-keymap)
 
@@ -71,21 +106,66 @@
 (defvar d-keymap
   (make-sparse-keymap))
 
+(defun kill-movement (movement)
+  `(lambda (arg)
+     (interactive "p")
+     (set-mark (point))
+     (funcall #',movement arg)
+     (kill-region (mark) (point))))
+
+(defun select-whole-line (arg)
+  (beginning-of-line)
+  (set-mark (point))
+  (next-line (1- arg))
+  (end-of-line)
+  (forward-char))
+
 (define-keys d-keymap
-  '(("w" kill-word)
-    ("b" backward-kill-word)
-    ("d" kill-whole-line)
-    ("f" zap-to-char)
-    ("L" kill-line)
-    ("s" just-one-space)
-    ("S" kill-sexp)
+  `(("w" ,(kill-movement 'forward-to-word))
+    ("W" ,(kill-movement 'forward-whitespace))
+    ("b" ,(kill-movement 'backward-word))
+    ("d" ,(kill-movement 'select-whole-line))
+    ("L" ,(kill-movement 'end-of-line))
+    ("S" ,(kill-movement 'forward-sexp))
     ("o" delete-blank-lines)
     ("v" kill-region)
+    ("s" just-one-space)
 
-    ("C-l" kill-sentence)
-    ("C-h" backward-kill-sentence)))
+    ("C-l" ,(kill-movement 'forward-sentence))
+    ("C-h" ,(kill-movement 'backward-sentence))))
 
 (define-key keys-minor-mode-map (kbd "d") d-keymap)
+
+;; c keymap
+
+(defvar c-keymap
+  (make-sparse-keymap))
+
+(defun change-movement (movement)
+  `(lambda (arg)
+     (interactive "p")
+     (funcall (kill-movement ',movement) arg)
+     (indent-for-tab-command)
+     (keys-minor-mode -1)))
+
+(defun select-whole-line-until-line-break (arg)
+  (beginning-of-line)
+  (set-mark (point))
+  (next-line (1- arg))
+  (end-of-line))
+
+(define-keys c-keymap
+  `(("w" ,(change-movement 'forward-to-word))
+    ("W" ,(change-movement 'forward-whitespace))
+    ("b" ,(change-movement 'backward-word))
+    ("c" ,(change-movement 'select-whole-line-until-line-break))
+    ("L" ,(change-movement 'end-of-line))
+    ("S" ,(change-movement 'forward-sexp))
+
+    ("C-l" ,(change-movement 'forward-sentence))
+    ("C-h" ,(change-movement 'backward-sentence))))
+
+(define-key keys-minor-mode-map (kbd "c") c-keymap)
 
 ;; v keymap
 
@@ -153,12 +233,21 @@
 
 (define-key keys-minor-mode-map (kbd "m") m-keymap)
 
+;; z keymap
+
+(defvar z-keymap
+  (make-sparse-keymap))
+
+(define-keys z-keymap
+  '(("z" recenter-top-bottom)))
+
+(define-key keys-minor-mode-map (kbd "z") z-keymap)
+
 ;; editing keys
 
 (define-keys keys-minor-mode-map
   '(("x" delete-forward-char)
     ("u" undo)
-    ("o" open-line)
     ("y" kill-ring-save)
     ("p" yank)
     ("P" yank-pop)
