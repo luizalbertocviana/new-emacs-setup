@@ -101,6 +101,27 @@
 
 (define-key keys-minor-mode-map (kbd "g") g-keymap)
 
+;; d i keymap
+
+(defvar d-i-keymap
+  (make-sparse-keymap))
+
+(defun kill-inside-movement (backward forward)
+  `(lambda (arg)
+     (interactive "p")
+     (funcall #',backward 1)
+     (set-mark (point))
+     (funcall #',forward arg)
+     (kill-region (mark) (point))))
+
+(defun backward-whitespace (arg)
+  (forward-whitespace (* -1 arg)))
+
+(define-keys d-i-keymap
+  `(("w"   ,(kill-inside-movement 'backward-word 'forward-to-word))
+    ("S"   ,(kill-inside-movement 'backward-sexp 'forward-sexp))
+    ("C-l" ,(kill-inside-movement 'backward-sentence 'forward-sentence))))
+
 ;; d keymap
 
 (defvar d-keymap
@@ -128,6 +149,7 @@
     ("L" ,(kill-movement 'end-of-line))
     ("S" ,(kill-movement 'forward-sexp))
     ("o" delete-blank-lines)
+    ("i" ,d-i-keymap)
     ("v" kill-region)
     ("s" just-one-space)
 
@@ -135,6 +157,23 @@
     ("C-h" ,(kill-movement 'backward-sentence))))
 
 (define-key keys-minor-mode-map (kbd "d") d-keymap)
+
+;; c i keymap
+
+(defvar c-i-keymap
+  (make-sparse-keymap))
+
+(defun change-inside-movement (backward forward)
+  `(lambda (arg)
+     (interactive "p")
+     (funcall (kill-inside-movement ',backward ',forward) arg)
+     (indent-for-tab-command)
+     (keys-minor-mode -1)))
+
+(define-keys c-i-keymap
+  `(("w"   ,(change-inside-movement 'backward-word 'forward-to-word))
+    ("S"   ,(change-inside-movement 'backward-sexp 'forward-sexp))
+    ("C-l" ,(change-inside-movement 'backward-sentence 'forward-sentence))))
 
 ;; c keymap
 
@@ -163,7 +202,9 @@
     ("S" ,(change-movement 'forward-sexp))
 
     ("C-l" ,(change-movement 'forward-sentence))
-    ("C-h" ,(change-movement 'backward-sentence))))
+    ("C-h" ,(change-movement 'backward-sentence))
+
+    ("i" ,c-i-keymap)))
 
 (define-key keys-minor-mode-map (kbd "c") c-keymap)
 
