@@ -114,9 +114,6 @@
      (funcall #',forward arg)
      (kill-region (mark) (point))))
 
-(defun backward-whitespace (arg)
-  (forward-whitespace (* -1 arg)))
-
 (define-keys d-i-keymap
   `(("w"   ,(kill-inside-movement 'backward-word 'forward-to-word))
     ("S"   ,(kill-inside-movement 'backward-sexp 'forward-sexp))
