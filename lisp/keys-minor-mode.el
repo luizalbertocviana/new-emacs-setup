@@ -118,9 +118,9 @@
      (kill-region (mark) (point))))
 
 (define-keys d-i-keymap
-  `(("w"   ,(kill-inside-movement 'backward-word 'forward-to-word))
-    ("S"   ,(kill-inside-movement 'backward-sexp 'forward-sexp))
-    ("C-l" ,(kill-inside-movement 'backward-sentence 'forward-sentence))))
+  `(("w"   ("word"     . ,(kill-inside-movement 'backward-word 'forward-to-word)))
+    ("S"   ("sexp"     . ,(kill-inside-movement 'backward-sexp 'forward-sexp)))
+    ("C-l" ("sentence" . ,(kill-inside-movement 'backward-sentence 'forward-sentence)))))
 
 ;; d keymap
 
@@ -142,19 +142,19 @@
   (forward-char))
 
 (define-keys d-keymap
-  `(("w" ,(kill-movement 'forward-to-word))
-    ("W" ,(kill-movement 'forward-whitespace))
-    ("b" ,(kill-movement 'backward-word))
-    ("d" ,(kill-movement 'select-whole-line))
-    ("L" ,(kill-movement 'end-of-line))
-    ("S" ,(kill-movement 'forward-sexp))
+  `(("w" ("word"              . ,(kill-movement 'forward-to-word)))
+    ("W" ("WORD"              . ,(kill-movement 'forward-whitespace)))
+    ("b" ("word backwards"    . ,(kill-movement 'backward-word)))
+    ("d" ("line"              . ,(kill-movement 'select-whole-line)))
+    ("L" ("until end of line" . ,(kill-movement 'end-of-line)))
+    ("S" ("sexp"              . ,(kill-movement 'forward-sexp)))
+    ("i" ("inside"            . ,d-i-keymap))
     ("o" delete-blank-lines)
-    ("i" ,d-i-keymap)
     ("v" kill-region)
     ("s" just-one-space)
 
-    ("C-l" ,(kill-movement 'forward-sentence))
-    ("C-h" ,(kill-movement 'backward-sentence))))
+    ("C-l" ("sentence"           . ,(kill-movement 'forward-sentence)))
+    ("C-h" ("sentence backwards" . ,(kill-movement 'backward-sentence)))))
 
 (define-key keys-minor-mode-map (kbd "d") d-keymap)
 
@@ -171,9 +171,9 @@
      (keys-minor-mode -1)))
 
 (define-keys c-i-keymap
-  `(("w"   ,(change-inside-movement 'backward-word 'forward-to-word))
-    ("S"   ,(change-inside-movement 'backward-sexp 'forward-sexp))
-    ("C-l" ,(change-inside-movement 'backward-sentence 'forward-sentence))))
+  `(("w"   ("word"     . ,(change-inside-movement 'backward-word 'forward-to-word)))
+    ("S"   ("sexp"     . ,(change-inside-movement 'backward-sexp 'forward-sexp)))
+    ("C-l" ("sentence" . ,(change-inside-movement 'backward-sentence 'forward-sentence)))))
 
 ;; c keymap
 
@@ -194,17 +194,17 @@
   (end-of-line))
 
 (define-keys c-keymap
-  `(("w" ,(change-movement 'forward-to-word))
-    ("W" ,(change-movement 'forward-whitespace))
-    ("b" ,(change-movement 'backward-word))
-    ("c" ,(change-movement 'select-whole-line-until-line-break))
-    ("L" ,(change-movement 'end-of-line))
-    ("S" ,(change-movement 'forward-sexp))
+  `(("w" ("word"                 . ,(change-movement 'forward-to-word)))
+    ("W" ("WORD"                 . ,(change-movement 'forward-whitespace)))
+    ("b" ("word backwards"       . ,(change-movement 'backward-word)))
+    ("c" ("line"                 . ,(change-movement 'select-whole-line-until-line-break)))
+    ("L" ("until end of line"    . ,(change-movement 'end-of-line)))
+    ("S" ("sexp"                 . ,(change-movement 'forward-sexp)))
 
-    ("C-l" ,(change-movement 'forward-sentence))
-    ("C-h" ,(change-movement 'backward-sentence))
+    ("C-l" ("sentence"           . ,(change-movement 'forward-sentence)))
+    ("C-h" ("sentence backwards" . ,(change-movement 'backward-sentence)))
 
-    ("i" ,c-i-keymap)))
+    ("i" ("inside"               . ,c-i-keymap))))
 
 (define-key keys-minor-mode-map (kbd "c") c-keymap)
 
@@ -298,7 +298,7 @@
      (kill-ring-save (mark) (point))))
 
 (define-keys y-i-keymap
-  `(("w" ,(yank-inside-movement 'backward-word 'forward-to-word))))
+  `(("w" ("word" . ,(yank-inside-movement 'backward-word 'forward-to-word)))))
 
 ;; y keymap
 
@@ -313,9 +313,9 @@
      (kill-ring-save (mark) (point))))
 
 (define-keys y-keymap
-  `(("y" ,(yank-movement 'select-whole-line))
-    ("w" ,(yank-movement 'forward-to-word))
-    ("i" ,y-i-keymap)))
+  `(("y" ("line"   . ,(yank-movement 'select-whole-line)))
+    ("w" ("word"   . ,(yank-movement 'forward-to-word)))
+    ("i" ("inside" . ,y-i-keymap))))
 
 (define-key keys-minor-mode-map (kbd "y") y-keymap)
 
@@ -362,7 +362,7 @@
     ("r" recentf-open-files)
     ("s" save-buffer)
     ("w" write-file)
-    ("b" ,bookmark-map)))
+    ("b" ("bookmark" . ,bookmark-map))))
 
 ;; rectangle keymap
 
@@ -409,8 +409,8 @@
     ("a" table-justify)
     ("i" table-insert)
     ("m" table-span-cell)
-    ("r" ,table-row-map)
-    ("c" ,table-column-map)
+    ("r" ("row"    . ,table-row-map))
+    ("c" ("column" . ,table-column-map))
     ("s" table-split-cell)))
 
 ;; text keymap
@@ -428,7 +428,8 @@
     ("s" sort-lines)
     ("o" occur)
     ("R" query-replace-regexp)
-    ("r" ,rectangle-map)
+    ("r" ("rectangle" . ,rectangle-map))
+    ("t" ("table"     . ,table-map))
     ("l" downcase-dwim)
     ("c" count-words)))
 
@@ -508,8 +509,8 @@
 
 (define-keys program-map
   `(("c" comment-line)
-    ("f" ,program-find-map)
-    ("l" ,lsp-map)
+    ("f" ("find" . ,program-find-map))
+    ("l" ("lsp"  . ,lsp-map))
     ("e" next-error)
     ("p" check-parens)
     ("B" compile)
@@ -538,7 +539,7 @@
     ("n" smerge-next)
     ("r" smerge-resolve)
     ("s" smerge-swap)
-    ("k" ,keep-keymap)))
+    ("k" ("keep" . ,keep-keymap))))
 
 ;; version keymap
 
@@ -566,23 +567,23 @@
   (switch-to-buffer (other-buffer)))
 
 (define-keys leader-map
-  `(("w" ,windows-map)
-    ("f" ,file-map)
-    ("b" ,buffer-map)
-    ("c" calendar)
-    ("h" ,help-map)
-    ("t" ,text-map)
+  `(("w" ("windows"         . ,windows-map))
+    ("f" ("files"           . ,file-map))
+    ("b" ("buffers"         . ,buffer-map))
+    ("h" ("help"            . ,help-map))
+    ("t" ("text"            . ,text-map))
+    ("p" ("program"         . ,program-map))
+    ("v" ("version control" . ,version-map))
+    ("m" ("mode"            . local-leader))
     ("T" eshell)
-    ("p" ,program-map)
-    ("v" ,version-map)
-    ("m" local-leader)
+    ("c" calendar)
     ("i" imenu)
     ("P" list-processes)
     ("r" async-shell-command)
     ("TAB" switch-to-last-buffer)
     ("q" save-buffers-kill-terminal)))
 
-(define-key leader-map (kbd "SPC") (kbd "C-c C-c"))
+(define-key leader-map (kbd "SPC") '("C-c C-c" . (kbd "C-c C-c")))
 
 (define-key keys-minor-mode-map (kbd leader) leader-map)
 
