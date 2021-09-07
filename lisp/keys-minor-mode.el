@@ -266,7 +266,7 @@
     ("q" kbd-macro-query)
     ("n" kmacro-name-last-macro)
     ("b" kmacro-bind-to-key)
-    ("i" insert-keyboard-macro)
+    ("i" insert-kbd-macro)
     ("e" kmacro-edit-macro)))
 
 (define-key keys-minor-mode-map (kbd "m") m-keymap)
