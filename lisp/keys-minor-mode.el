@@ -97,7 +97,10 @@
     ("l" goto-line)
     ("j" join-line)
     ("G" end-of-buffer)
-    ("d" xref-find-definitions)))
+    ("d" xref-find-definitions)
+    ("r" xref-find-references)
+    (";" goto-last-change)
+    ("," goto-last-change-reverse)))
 
 (define-key keys-minor-mode-map (kbd "g") g-keymap)
 
