@@ -583,7 +583,7 @@
     ("TAB" switch-to-last-buffer)
     ("q" save-buffers-kill-terminal)))
 
-(define-key leader-map (kbd "SPC") '("C-c C-c" . (kbd "C-c C-c")))
+(define-key leader-map (kbd "SPC") `("C-c C-c" . ,(kbd "C-c C-c")))
 
 (define-key keys-minor-mode-map (kbd leader) leader-map)
 
