@@ -5,6 +5,8 @@
   (require 'smartparens-config)
   (smartparens-global-mode))
 
+(use-package goto-chg)
+
 (use-package smart-hungry-delete
   :bind (("<backspace>" . smart-hungry-delete-backward-char))
   :defer nil ;; dont defer so we can add our functions to hooks 
