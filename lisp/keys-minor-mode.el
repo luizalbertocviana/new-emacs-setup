@@ -75,7 +75,7 @@
 
     ("f" isearch-forward-regexp)
     ("F" isearch-backward-regexp)
-    
+
     ("C-h" backward-sentence)
     ("C-j" scroll-up-command)
     ("C-k" scroll-down-command)
@@ -284,12 +284,46 @@
 
 (define-key keys-minor-mode-map (kbd "z") z-keymap)
 
+;; y i keymap
+
+(defvar y-i-keymap
+  (make-sparse-keymap))
+
+(defun yank-inside-movement (backward forward)
+  `(lambda (arg)
+     (interactive "p")
+     (funcall #',backward 1)
+     (set-mark (point))
+     (funcall #',forward arg)
+     (kill-ring-save (mark) (point))))
+
+(define-keys y-i-keymap
+  `(("w" ,(yank-inside-movement 'backward-word 'forward-to-word))))
+
+;; y keymap
+
+(defvar y-keymap
+  (make-sparse-keymap))
+
+(defun yank-movement (movement)
+  `(lambda (arg)
+     (interactive "p")
+     (set-mark (point))
+     (funcall #',movement arg)
+     (kill-ring-save (mark) (point))))
+
+(define-keys y-keymap
+  `(("y" ,(yank-movement 'select-whole-line))
+    ("w" ,(yank-movement 'forward-to-word))
+    ("i" ,y-i-keymap)))
+
+(define-key keys-minor-mode-map (kbd "y") y-keymap)
+
 ;; editing keys
 
 (define-keys keys-minor-mode-map
   `(("x" delete-forward-char)
     ("u" undo)
-    ("y" kill-ring-save)
     ("p" yank)
     ("P" yank-pop)
     ("." repeat)
@@ -301,6 +335,7 @@
 
     ("D" ,(kill-movement 'end-of-line))
     ("C" ,(change-movement 'end-of-line))
+    ("Y" ,(yank-movement 'end-of-line))
 
     ("M-l" completion-at-point)))
 
