@@ -319,6 +319,75 @@
 
 (define-key keys-minor-mode-map (kbd "y") y-keymap)
 
+;; s keymap
+
+(defvar s-keymap
+  (make-sparse-keymap))
+
+(defvar s-a-keymap
+  (make-sparse-keymap))
+
+(define-keys s-a-keymap
+  '(("h" sp-add-to-next-sexp)
+    ("l" sp-add-to-previous-sexp)))
+
+(defvar s-b-keymap
+  (make-sparse-keymap))
+
+(define-keys s-b-keymap
+  '(("h" sp-backward-barf-sexp)
+    ("l" sp-forward-barf-sexp)))
+
+(defvar s-d-keymap
+  (make-sparse-keymap))
+
+(define-keys s-d-keymap
+  '(("h" sp-backward-kill-sexp)
+    ("l" sp-kill-sexp)))
+
+(defvar s-s-keymap
+  (make-sparse-keymap))
+
+(define-keys s-s-keymap
+  '(("h" sp-backward-slurp-sexp)
+    ("l" sp-forward-slurp-sexp)))
+
+(defvar s-u-keymap
+  (make-sparse-keymap))
+
+(define-keys s-u-keymap
+  '(("h" sp-backward-unwrap-sexp)
+    ("l" sp-unwrap-sexp)))
+
+(defvar s-y-keymap
+  (make-sparse-keymap))
+
+(define-keys s-y-keymap
+  '(("h" sp-backward-copy-sexp)
+    ("l" sp-copy-sexp)))
+
+(define-keys s-keymap
+  `(("a" ("add"    . ,s-a-keymap))
+    ("b" ("barf"   . ,s-b-keymap))
+    ("d" ("delete" . ,s-d-keymap))
+    ("s" ("slurp"  . ,s-s-keymap))
+    ("u" ("unwrap" . ,s-u-keymap))
+    ("y" ("yank"   . ,s-y-keymap))
+    ("C" sp-clone-sexp)
+    ("S" sp-split-sexp)
+    ("c" sp-change-enclosing)
+    ("J" sp-join-sexp)
+    ("r" sp-rewrap-sexp)
+    ("t" sp-transpose-sexp)
+    ("v" sp-select-next-thing)
+    ("h" sp-backward-sexp)
+    ("j" sp-down-sexp)
+    ("k" sp-backward-up-sexp)
+    ("l" sp-forward-sexp)
+    ))
+
+(define-key keys-minor-mode-map (kbd "s") s-keymap)
+
 ;; editing keys
 
 (define-keys keys-minor-mode-map
@@ -327,7 +396,7 @@
     ("p" yank)
     ("P" yank-pop)
     ("." repeat)
-    ("s" isearch-forward-symbol-at-point)
+    ("S" isearch-forward-symbol-at-point)
     (">" repeat-complex-command)
 
     ("C-s" isearch-forward-regexp)
