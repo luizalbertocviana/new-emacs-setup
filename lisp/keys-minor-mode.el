@@ -367,6 +367,21 @@
   '(("h" sp-backward-copy-sexp)
     ("l" sp-copy-sexp)))
 
+(defvar transient-sexp-keymap
+  (make-sparse-keymap))
+
+(define-keys transient-sexp-keymap
+  '(("h" sp-backward-sexp)
+    ("j" sp-down-sexp)
+    ("k" sp-backward-up-sexp)
+    ("l" sp-forward-sexp)))
+
+(defun transient-sexp-movement (first-movement)
+  `(lambda ()
+     (interactive)
+     (funcall #',first-movement)
+     (set-transient-map transient-sexp-keymap t)))
+
 (define-keys s-keymap
   `(("a" ("add"    . ,s-a-keymap))
     ("b" ("barf"   . ,s-b-keymap))
@@ -381,10 +396,10 @@
     ("r" sp-rewrap-sexp)
     ("t" sp-transpose-sexp)
     ("v" sp-select-next-thing)
-    ("h" sp-backward-sexp)
-    ("j" sp-down-sexp)
-    ("k" sp-backward-up-sexp)
-    ("l" sp-forward-sexp)
+    ("h" ,(transient-sexp-movement 'sp-backward-sexp))
+    ("j" ,(transient-sexp-movement 'sp-down-sexp))
+    ("k" ,(transient-sexp-movement 'sp-backward-up-sexp))
+    ("l" ,(transient-sexp-movement 'sp-forward-sexp))
     ))
 
 (define-key keys-minor-mode-map (kbd "s") s-keymap)
