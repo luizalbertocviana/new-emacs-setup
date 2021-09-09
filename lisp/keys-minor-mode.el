@@ -20,35 +20,12 @@
 		(assq-delete-all 'keys-minor-mode minor-mode-map-alist)
 		(add-to-list 'minor-mode-map-alist keys)))))
 
-;; helper functions
-
-(defun define-keys (keymap bindings)
-  (dolist (binding bindings)
-    (define-key keymap (kbd (nth 0 binding)) (nth 1 binding))))
-
 ;; keybindings
 
 ;; esc turns on the new layer of keybindings
 (global-set-key (kbd "<escape>") 'keys-minor-mode)
 
 ;; insert entering keybindings
-
-(defun open-newline-below ()
-  (end-of-line)
-  (newline)
-  (indent-for-tab-command))
-
-(defun open-newline-above ()
-  (beginning-of-line)
-  (newline)
-  (previous-line)
-  (indent-for-tab-command))
-
-(defun insert-after-movement (movement)
-  `(lambda ()
-     (interactive)
-     (funcall #',movement)
-     (keys-minor-mode -1)))
 
 (define-keys keys-minor-mode-map
   `(("i" keys-minor-mode)
@@ -109,14 +86,6 @@
 (defvar d-i-keymap
   (make-sparse-keymap))
 
-(defun kill-inside-movement (backward forward)
-  `(lambda (arg)
-     (interactive "p")
-     (funcall #',backward 1)
-     (set-mark (point))
-     (funcall #',forward arg)
-     (kill-region (mark) (point))))
-
 (define-keys d-i-keymap
   `(("w"   ("word"     . ,(kill-inside-movement 'backward-word 'forward-to-word)))
     ("S"   ("sexp"     . ,(kill-inside-movement 'backward-sexp 'forward-sexp)))
@@ -126,20 +95,6 @@
 
 (defvar d-keymap
   (make-sparse-keymap))
-
-(defun kill-movement (movement)
-  `(lambda (arg)
-     (interactive "p")
-     (set-mark (point))
-     (funcall #',movement arg)
-     (kill-region (mark) (point))))
-
-(defun select-whole-line (arg)
-  (beginning-of-line)
-  (set-mark (point))
-  (next-line (1- arg))
-  (end-of-line)
-  (forward-char))
 
 (define-keys d-keymap
   `(("w" ("word"              . ,(kill-movement 'forward-to-word)))
@@ -163,13 +118,6 @@
 (defvar c-i-keymap
   (make-sparse-keymap))
 
-(defun change-inside-movement (backward forward)
-  `(lambda (arg)
-     (interactive "p")
-     (funcall (kill-inside-movement ',backward ',forward) arg)
-     (indent-for-tab-command)
-     (keys-minor-mode -1)))
-
 (define-keys c-i-keymap
   `(("w"   ("word"     . ,(change-inside-movement 'backward-word 'forward-to-word)))
     ("S"   ("sexp"     . ,(change-inside-movement 'backward-sexp 'forward-sexp)))
@@ -179,19 +127,6 @@
 
 (defvar c-keymap
   (make-sparse-keymap))
-
-(defun change-movement (movement)
-  `(lambda (arg)
-     (interactive "p")
-     (funcall (kill-movement ',movement) arg)
-     (indent-for-tab-command)
-     (keys-minor-mode -1)))
-
-(defun select-whole-line-until-line-break (arg)
-  (beginning-of-line)
-  (set-mark (point))
-  (next-line (1- arg))
-  (end-of-line))
 
 (define-keys c-keymap
   `(("w" ("word"                 . ,(change-movement 'forward-to-word)))
@@ -289,14 +224,6 @@
 (defvar y-i-keymap
   (make-sparse-keymap))
 
-(defun yank-inside-movement (backward forward)
-  `(lambda (arg)
-     (interactive "p")
-     (funcall #',backward 1)
-     (set-mark (point))
-     (funcall #',forward arg)
-     (kill-ring-save (mark) (point))))
-
 (define-keys y-i-keymap
   `(("w" ("word" . ,(yank-inside-movement 'backward-word 'forward-to-word)))))
 
@@ -304,13 +231,6 @@
 
 (defvar y-keymap
   (make-sparse-keymap))
-
-(defun yank-movement (movement)
-  `(lambda (arg)
-     (interactive "p")
-     (set-mark (point))
-     (funcall #',movement arg)
-     (kill-ring-save (mark) (point))))
 
 (define-keys y-keymap
   `(("y" ("line"   . ,(yank-movement 'select-whole-line)))
@@ -643,13 +563,6 @@
 
 (defvar leader-map
   (make-sparse-keymap))
-
-(defun local-leader ()
-  nil)
-
-(defun switch-to-last-buffer ()
-  (interactive)
-  (switch-to-buffer (other-buffer)))
 
 (define-keys leader-map
   `(("w" ("windows"         . ,windows-map))
