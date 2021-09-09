@@ -315,6 +315,7 @@
 (define-keys y-keymap
   `(("y" ("line"   . ,(yank-movement 'select-whole-line)))
     ("w" ("word"   . ,(yank-movement 'forward-to-word)))
+    ("v" ("region" . kill-ring-save))
     ("i" ("inside" . ,y-i-keymap))))
 
 (define-key keys-minor-mode-map (kbd "y") y-keymap)
