@@ -18,3 +18,4 @@
 (define-key (current-global-map) [remap find-file]                'helm-find-files)
 (define-key (current-global-map) [remap occur]                    'helm-occur)
 (define-key (current-global-map) [remap execute-extended-command] 'helm-M-x)
+(define-key (current-global-map) [remap switch-to-buffer]         'helm-buffers-list)
