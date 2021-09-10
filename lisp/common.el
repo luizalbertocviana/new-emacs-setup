@@ -3,7 +3,8 @@
 (use-package smartparens
   :config
   (require 'smartparens-config)
-  (smartparens-global-mode))
+  (smartparens-global-mode)
+  (show-smartparens-global-mode 1))
 
 (use-package goto-chg)
 
