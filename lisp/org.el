@@ -2,6 +2,7 @@
   :hook
   (org-mode . (lambda () (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t)))
   (org-agenda-mode . (lambda ()
+                       (local-set-key [remap kill-whole-line]    'org-agenda-kill)              
                        (local-set-key [remap undo]               'org-agenda-undo)              
                        (local-set-key [remap next-line]          'org-agenda-next-item)         
                        (local-set-key [remap previous-line]      'org-agenda-previous-item)     
@@ -9,6 +10,11 @@
                        (local-set-key [remap forward-char]       'org-agenda-show-and-scroll-up)
                        (local-set-key [remap beginning-of-defun] 'org-agenda-earlier)           
                        (local-set-key [remap end-of-defun]       'org-agenda-later)))
+  (org-agenda-mode . (lambda ()
+                       (local-set-key (kbd "c") 'org-agenda-date-prompt)
+                       (local-set-key (kbd "t") 'org-agenda-todo)       
+                       (local-set-key (kbd "m") 'org-agenda-bulk-toggle)
+                       (local-set-key (kbd "M") 'org-agenda-bulk-action)))
   :custom
   (org-agenda-new-buffers nil)
   (org-confirm-babel-evaluate nil)
