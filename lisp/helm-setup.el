@@ -4,6 +4,8 @@
 
 (use-package helm-lsp)
 
+(helm-mode 1)
+
 (define-key file-map (kbd "o") 'helm-multi-files)
 
 (define-key (current-global-map) [remap imenu]                    'helm-imenu)
