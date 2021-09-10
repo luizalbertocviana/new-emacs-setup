@@ -128,19 +128,3 @@
 (define-key org-read-date-minibuffer-local-map (kbd "L") (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-month 1))))
 (define-key org-read-date-minibuffer-local-map (kbd "J") (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-year 1))))
 (define-key org-read-date-minibuffer-local-map (kbd "K") (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-year 1))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
