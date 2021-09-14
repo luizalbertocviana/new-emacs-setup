@@ -122,9 +122,7 @@
   ("t" org-todo-hydra/body          "todo")
 )
 
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key [remap local-leader] 'org-hydra/body)))
+(define-key org-mode-map [remap local-leader] 'org-hydra/body)
 
 (define-key org-read-date-minibuffer-local-map (kbd "h") (lambda () (interactive) (org-eval-in-calendar '(calendar-backward-day 1))))
 (define-key org-read-date-minibuffer-local-map (kbd "l") (lambda () (interactive) (org-eval-in-calendar '(calendar-forward-day 1))))
