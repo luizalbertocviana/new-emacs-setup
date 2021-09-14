@@ -19,3 +19,5 @@
 (load "helm-setup")
 
 (load "org")
+
+(load "lang/clojure")
