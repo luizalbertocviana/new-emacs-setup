@@ -24,3 +24,4 @@
 
 ;; (load "lang/cmake")
 
+(load "lang/cpp")
