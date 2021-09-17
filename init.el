@@ -21,3 +21,6 @@
 (load "org")
 
 (load "lang/clojure")
+
+;; (load "lang/cmake")
+
