@@ -8,3 +8,5 @@
 /transient/
 /var/
 /.cache/
+/.lsp-session-v1
+/eshell/
